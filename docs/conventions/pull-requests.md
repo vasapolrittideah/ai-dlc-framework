@@ -137,7 +137,7 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 - Delete the HTML comments of the template.
 - Write What changed as the lasting record for a later reader of `main`. Write the other sections for the reviewer and the merge decision.
 - If a section has content, replace its `n/a`.
-- Do not copy CI output or measurements, such as test coverage, into the description. Link the CI run instead.
+- Do not copy CI output or measurements, such as test coverage, into the description. Link the CI run instead. The summary in a [Verification](#verification) result, such as `passed (32/32 tests)`, is not a measurement, because it states the result of 1 check.
 
 ### Workflow
 
