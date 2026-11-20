@@ -28,7 +28,7 @@ n/a
 
 ## Verification
 
-<!-- Write 1 bullet for each check that you ran: `- <check>: <result>.` Write a command in backticks, or describe a manual check in words. Write the result as `passed`, `failed`, or `did not run`, with the cause of a failure or the reason a check did not run. -->
+<!-- Write 1 bullet for each check that you ran: `- <check>: <result>.` Write a command in backticks, or describe a manual check in words. Write the result as `passed`, `failed`, or `did not run`, and add a count or short summary from the output in parentheses, such as `passed (32/32 tests)`. Give the cause of a failure or the reason a check did not run. Order the bullets: checks from `AGENTS.md`, Issue verification commands, other checks, then unresolved CI failures. -->
 
 ## Risks or limitations
 

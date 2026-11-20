@@ -90,7 +90,12 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 ### Verification
 
 - Write 1 bullet for each check that the [Workflow](#workflow) rules require and for each other check that you ran, as `- <check>: <result>.` Write a command in backticks, and describe a manual check in words, such as "Each link in the changed files opens".
-- Write the result as `passed`, `failed`, or `did not run`. For a failure, state the cause. For a check that did not run, state the reason.
+- Write the result as `passed`, `failed`, or `did not run`. If the output of the check gives a count or a short summary, add it in parentheses after the result, such as `passed (32/32 tests)` or `failed (2 files with trailing spaces)`. For a failure, state the cause. For a check that did not run, state the reason.
+- Order the bullets by the source of the check:
+  1. The checks that `AGENTS.md` lists.
+  2. The verification commands of the related Issues.
+  3. The other checks that you ran, such as a regression test or a check of the facts and links in changed documentation.
+  4. The CI checks that failed and stay unresolved.
 - Show the evidence for each unresolved failure with these steps:
   1. Before the PR opens, put the local output that shows the failure in a code block under its bullet, because no CI run exists for the PR.
   2. After the first CI run finishes, replace the output with a link to that run.
