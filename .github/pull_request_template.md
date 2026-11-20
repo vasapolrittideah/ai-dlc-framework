@@ -1,8 +1,12 @@
-<!-- Follow docs/conventions/pull-requests.md. Use a paragraph for 1 connected point and bullets for 2 or more independent points. Write What changed as the lasting record for a later reader of `main`, because the squash commit has only the PR title. Delete these comments. -->
+<!-- Follow docs/conventions/pull-requests.md. Use a paragraph for 1 connected point and bullets for 2 or more independent points, except in Result and What changed. Delete these comments. -->
+
+## Result
+
+<!-- Write 1 paragraph of 1 to 3 sentences that states the lasting effect of the PR on `main`, for a later reader of `main`. The squash commit has only the PR title, so this paragraph is the lasting record. -->
 
 ## What changed
 
-<!-- State the lasting effect on `main` first, then what a reviewer must know. Use a table with the columns `Value`, `Before`, and `After` for each existing value that the PR changes. List added or removed values in bullets. For a revert, start with `Reverts <full SHA>.` -->
+<!-- List each change that a reviewer must know, with bullets and tables only, also for 1 change. Use a table with the columns `Value`, `Before`, and `After` for each existing value that the PR changes. List added or removed values in bullets. For a revert, start with `Reverts <full SHA>.` -->
 
 ## Why
 

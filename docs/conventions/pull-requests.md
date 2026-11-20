@@ -4,14 +4,18 @@ This convention defines how to write a pull request (PR) and how to prepare it f
 
 ## Template
 
-A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts](#related-artifacts), [Related issues](#related-issues), [Breaking changes](#breaking-changes), [Verification](#verification), [Risks or limitations](#risks-or-limitations), [Follow-up tasks](#follow-up-tasks), and an attribution line.
+A PR has a title, [Result](#result), [What changed](#what-changed), [Why](#why), [Related artifacts](#related-artifacts), [Related issues](#related-issues), [Breaking changes](#breaking-changes), [Verification](#verification), [Risks or limitations](#risks-or-limitations), [Follow-up tasks](#follow-up-tasks), and an attribution line.
 
 ```markdown
 <PR title>
 
+## Result
+
+<lasting effect of the PR on main>
+
 ## What changed
 
-<changes and result>
+- <change that a reviewer must know>
 
 ## Why
 
@@ -50,9 +54,16 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 - Describe the result, not the branch or the changed files.
 - Do not include a body or a footer.
 
+### Result
+
+- Write 1 paragraph of 1 to 3 sentences, without bullets or tables.
+- State the lasting effect of the merged PR on `main`, for a later reader of `main`.
+- Do not list the changes. List them in [What changed](#what-changed).
+- Do not write `n/a`, because each PR has an effect on `main`.
+
 ### What changed
 
-- State the lasting effect of the merged PR on `main` first, for a later reader of `main`. Then state each change that a reviewer must know to review the PR.
+- List each change that a reviewer must know to review the PR. Use only bullets and tables, also when there is only 1 change. The `Reverts` line of a revert PR is the only exception.
 - If the PR changes an existing value, such as a configuration value, a default, a limit, or an API field, show the value in a table, also when it is the only changed value. Give the table the columns `Value`, `Before`, and `After`, in this order, and name each changed value in the `Value` column.
 - If the PR title has the `revert` type, start the section with `Reverts <full SHA>.`, and give the reason in [Why](#why). Write the SHA without backticks, so that GitHub links the reverted commit.
 - Do not put a value that the PR adds or removes in the table, because its `Before` or `After` cell has no value. List the added or removed values in bullets.
@@ -135,7 +146,7 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 
 - Start the description from the [`.github/pull_request_template.md`](../../.github/pull_request_template.md) template, and complete every section.
 - Delete the HTML comments of the template.
-- Write What changed as the lasting record for a later reader of `main`. Write the other sections for the reviewer and the merge decision.
+- Write [Result](#result) as the lasting record for a later reader of `main`. Write the other sections for the reviewer and the merge decision.
 - If a section has content, replace its `n/a`.
 - Do not copy CI output or measurements, such as test coverage, into the description. Link the CI run instead. The summary in a [Verification](#verification) result, such as `passed (32/32 tests)`, is not a measurement, because it states the result of 1 check.
 
