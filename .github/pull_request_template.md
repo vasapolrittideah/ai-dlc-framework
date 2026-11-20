@@ -12,18 +12,6 @@
 
 <!-- State the problem and the reason for the chosen change. Link artifacts in Related artifacts, not here. -->
 
-## Related artifacts
-
-<!-- Write 1 bullet for each intent, specification, plan, or other lifecycle artifact that the PR implements, changes, or depends on, with its path in backticks as the link text. Order the bullets by stage. -->
-
-n/a
-
-## Related issues
-
-<!-- Write 1 line for each Issue: `Closes #<Issue number>.` if this PR completes it, or `Refs #<Issue number>.` if it stays open. -->
-
-n/a
-
 ## Breaking changes
 
 <!-- If the title has `!` or another change is incompatible, state what breaks and what users must change. -->
@@ -43,5 +31,17 @@ n/a
 ## Follow-up tasks
 
 <!-- Write 1 bullet for each piece of later work: `- #<Issue number>: <remaining work>.` for work with an open Issue, or `- <remaining work>.` for work without one. -->
+
+n/a
+
+## Related artifacts
+
+<!-- Write 1 bullet for each intent, specification, plan, or other lifecycle artifact that the PR implements, changes, or depends on, with its path in backticks as the link text. Order the bullets by stage. -->
+
+n/a
+
+## Related issues
+
+<!-- Write 1 line for each Issue: `Closes #<Issue number>.` if this PR completes it, or `Refs #<Issue number>.` if it stays open. -->
 
 n/a

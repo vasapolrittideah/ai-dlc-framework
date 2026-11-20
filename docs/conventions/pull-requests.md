@@ -4,7 +4,7 @@ This convention defines how to write a pull request (PR) and how to prepare it f
 
 ## Template
 
-A PR has a title, [Result](#result), [What changed](#what-changed), [Why](#why), [Related artifacts](#related-artifacts), [Related issues](#related-issues), [Breaking changes](#breaking-changes), [Verification](#verification), [Risks or limitations](#risks-or-limitations), [Follow-up tasks](#follow-up-tasks), and an attribution line.
+A PR has a title, [Result](#result), [What changed](#what-changed), [Why](#why), [Breaking changes](#breaking-changes), [Verification](#verification), [Risks or limitations](#risks-or-limitations), [Follow-up tasks](#follow-up-tasks), [Related artifacts](#related-artifacts), [Related issues](#related-issues), and an attribution line.
 
 ```markdown
 <PR title>
@@ -21,14 +21,6 @@ A PR has a title, [Result](#result), [What changed](#what-changed), [Why](#why),
 
 <problem and the reason for the change>
 
-## Related artifacts
-
-- <link to an artifact>
-
-## Related issues
-
-<Issue line>
-
 ## Breaking changes
 
 <what breaks and what users must change>
@@ -44,6 +36,14 @@ A PR has a title, [Result](#result), [What changed](#what-changed), [Why](#why),
 ## Follow-up tasks
 
 - <remaining work>
+
+## Related artifacts
+
+- <link to an artifact>
+
+## Related issues
+
+<Issue line>
 
 <attribution line, if any>
 ```
@@ -74,23 +74,6 @@ A PR has a title, [Result](#result), [What changed](#what-changed), [Why](#why),
 
 - State the problem that the PR solves and the reason for the chosen change.
 - Do not repeat the content of an artifact. Link the artifact in [Related artifacts](#related-artifacts) instead.
-
-### Related artifacts
-
-- Write 1 bullet for each lifecycle artifact that the PR implements, changes, or depends on, such as an intent, a specification, or a plan.
-- Use the path of the artifact in backticks as the link text.
-- Order the bullets by the stage of the artifact, from the earliest stage to the latest.
-- If no artifact is related, write `n/a`.
-
-### Related issues
-
-- Write 1 line for each Issue, and repeat the keyword on each line, because GitHub ignores an Issue that follows a comma. Put the lines without blank lines between them, and end each line with a period.
-- Put the `Closes` lines before the `Refs` lines, and order each group by ascending Issue number.
-- Write `Closes #<Issue number>.` for each Issue that the PR completes. GitHub closes the Issue after the PR merges into `main`.
-- Write `Refs #<Issue number>.` for each Issue that stays open. An example is a PR that updates a specification before the implementation.
-- If no Issue is related, write `n/a`.
-- Do not use `Fixes`, although GitHub accepts it. Use `Closes` for consistency.
-- Do not repeat a follow-up Issue.
 
 ### Breaking changes
 
@@ -136,9 +119,26 @@ A PR has a title, [Result](#result), [What changed](#what-changed), [Why](#why),
 - If the PR leaves no work for later, write `n/a`.
 - Do not put `Closes`, `Fixes`, or `Resolves` before the Issue number, because GitHub then closes the Issue when the PR merges.
 
+### Related artifacts
+
+- Write 1 bullet for each lifecycle artifact that the PR implements, changes, or depends on, such as an intent, a specification, or a plan.
+- Use the path of the artifact in backticks as the link text.
+- Order the bullets by the stage of the artifact, from the earliest stage to the latest.
+- If no artifact is related, write `n/a`.
+
+### Related issues
+
+- Write 1 line for each Issue, and repeat the keyword on each line, because GitHub ignores an Issue that follows a comma. Put the lines without blank lines between them, and end each line with a period.
+- Put the `Closes` lines before the `Refs` lines, and order each group by ascending Issue number.
+- Write `Closes #<Issue number>.` for each Issue that the PR completes. GitHub closes the Issue after the PR merges into `main`.
+- Write `Refs #<Issue number>.` for each Issue that stays open. An example is a PR that updates a specification before the implementation.
+- If no Issue is related, write `n/a`.
+- Do not use `Fixes`, although GitHub accepts it. Use `Closes` for consistency.
+- Do not repeat a follow-up Issue.
+
 ### Attribution line
 
-- If the agent harness gives an attribution line for PR descriptions, put it at the end of the description, after [Follow-up tasks](#follow-up-tasks).
+- If the agent harness gives an attribution line for PR descriptions, put it at the end of the description, after [Related issues](#related-issues).
 
 ## Rules
 
