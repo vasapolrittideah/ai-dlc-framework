@@ -14,21 +14,25 @@
 
 n/a
 
-## Breaking changes
-
-<!-- If the title has `!` or another change is incompatible, state what breaks and what users must change. -->
-
-n/a
-
 ## Related issues
 
 <!-- Write 1 line for each Issue: `Closes #<Issue number>.` if this PR completes it, or `Refs #<Issue number>.` if it stays open. -->
 
 n/a
 
+## Breaking changes
+
+<!-- If the title has `!` or another change is incompatible, state what breaks and what users must change. -->
+
+n/a
+
+## Verification
+
+<!-- Write 1 bullet for each check that you ran: `- <check>: <result>.` Write a command in backticks, or describe a manual check in words. Write the result as `passed`, `failed`, or `did not run`, with the cause of a failure or the reason a check did not run. -->
+
 ## Risks or limitations
 
-<!-- Write revert safety when a revert is not safe, the parts that a failure affects when the PR changes a shared path, unresolved failures, checks that did not run, and remaining limits. -->
+<!-- Write revert safety when a revert is not safe, the parts that a failure affects when the PR changes a shared path, security risks, and remaining limits. Write check results in Verification. -->
 
 n/a
 

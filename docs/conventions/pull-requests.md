@@ -4,7 +4,7 @@ This convention defines how to write a pull request (PR) and how to prepare it f
 
 ## Template
 
-A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts](#related-artifacts), [Breaking changes](#breaking-changes), [Related issues](#related-issues), [Risks or limitations](#risks-or-limitations), [Follow-up tasks](#follow-up-tasks), and an attribution line.
+A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts](#related-artifacts), [Related issues](#related-issues), [Breaking changes](#breaking-changes), [Verification](#verification), [Risks or limitations](#risks-or-limitations), [Follow-up tasks](#follow-up-tasks), and an attribution line.
 
 ```markdown
 <PR title>
@@ -21,17 +21,21 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 
 - <link to an artifact>
 
-## Breaking changes
-
-<what breaks and what users must change>
-
 ## Related issues
 
 <Issue line>
 
+## Breaking changes
+
+<what breaks and what users must change>
+
+## Verification
+
+- <check>: <result>
+
 ## Risks or limitations
 
-<revert safety, unresolved failures, checks that did not run, or remaining limits>
+<revert safety, security risks, or remaining limits>
 
 ## Follow-up tasks
 
@@ -67,12 +71,6 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 - Order the bullets by the stage of the artifact, from the earliest stage to the latest.
 - If no artifact is related, write `n/a`.
 
-### Breaking changes
-
-- If the PR title has a breaking marker, state what breaks and the changes that users must make.
-- State each other incompatible change, such as a renamed environment variable, and the changes that the affected people must make.
-- If nothing breaks, write `n/a`.
-
 ### Related issues
 
 - Write 1 line for each Issue, and repeat the keyword on each line, because GitHub ignores an Issue that follows a comma. Put the lines without blank lines between them, and end each line with a period.
@@ -83,16 +81,27 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 - Do not use `Fixes`, although GitHub accepts it. Use `Closes` for consistency.
 - Do not repeat a follow-up Issue.
 
-### Risks or limitations
+### Breaking changes
 
+- If the PR title has a breaking marker, state what breaks and the changes that users must make.
+- State each other incompatible change, such as a renamed environment variable, and the changes that the affected people must make.
+- If nothing breaks, write `n/a`.
+
+### Verification
+
+- Write 1 bullet for each check that the [Workflow](#workflow) rules require and for each other check that you ran, as `- <check>: <result>.` Write a command in backticks, and describe a manual check in words, such as "Each link in the changed files opens".
+- Write the result as `passed`, `failed`, or `did not run`. For a failure, state the cause. For a check that did not run, state the reason.
 - Show the evidence for each unresolved failure with these steps:
   1. Before the PR opens, put the local output that shows the failure in a code block under its bullet, because no CI run exists for the PR.
   2. After the first CI run finishes, replace the output with a link to that run.
+- If a CI check fails and the failure stays unresolved, add a bullet for it, and link the run.
+- Do not write `n/a`, because each PR has at least the checks that the Workflow rules require.
+
+### Risks or limitations
+
 - If a revert of the PR is not safe, such as after a data migration, state why and what a revert needs.
 - If the PR changes code or configuration that more than 1 part of the project uses, name the parts that a failure of the change affects.
-- Write each unresolved failure, local check that did not run, security risk, and remaining limit. Write each compatibility effect in [Breaking changes](#breaking-changes).
-- For each unresolved failure, state the cause and link the CI run or the output that shows it.
-- For each local check that did not run, state the reason.
+- Write each security risk and remaining limit. Write each check result in [Verification](#verification), and each compatibility effect in [Breaking changes](#breaking-changes).
 - When a limitation has follow-up work, describe the limitation and refer to [Follow-up tasks](#follow-up-tasks) instead of repeating the work.
 - If there is nothing to report, write `n/a`.
 - Do not paste routine logs.
@@ -123,7 +132,7 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 - Delete the HTML comments of the template.
 - Write What changed as the lasting record for a later reader of `main`. Write the other sections for the reviewer and the merge decision.
 - If a section has content, replace its `n/a`.
-- Do not copy CI results or measurements, such as test coverage, into the description.
+- Do not copy CI output or measurements, such as test coverage, into the description. Link the CI run instead.
 
 ### Workflow
 
@@ -136,7 +145,7 @@ A PR has a title, [What changed](#what-changed), [Why](#why), [Related artifacts
 - If the repository has CI, handle it after each push with these steps:
   1. Wait for the CI checks to finish.
   2. If the job log shows that a failure comes from the runner, the network, or an external service, such as a registry timeout, rerun the failed job 1 time.
-  3. If it fails again, state the cause and link the run in [Risks or limitations](#risks-or-limitations).
+  3. If it fails again, state the cause and link the run in [Verification](#verification).
   4. Fix every other failure in the PR.
 - Do not weaken a command or hide a failure.
 
