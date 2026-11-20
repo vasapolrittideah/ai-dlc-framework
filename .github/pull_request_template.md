@@ -2,7 +2,7 @@
 
 ## What changed
 
-<!-- State the lasting effect on `main` first, then what a reviewer must know. Use a table with `Before` and `After` columns for each existing value that the PR changes. List added or removed values in bullets. For a revert, start with `Reverts <full SHA>.` -->
+<!-- State the lasting effect on `main` first, then what a reviewer must know. Use a table with the columns `Value`, `Before`, and `After` for each existing value that the PR changes. List added or removed values in bullets. For a revert, start with `Reverts <full SHA>.` -->
 
 ## Why
 
