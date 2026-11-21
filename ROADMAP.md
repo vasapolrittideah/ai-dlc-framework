@@ -31,7 +31,7 @@ The bundled `simple-english` and `humanizer` skills are also sources. [`skills/T
 - A change cannot edit its own checks. Hooks and CI read their checks from `main`, not from the branch that they check.
 - Put each instruction where its force matches the rule. Keep always-on context in `AGENTS.md` under 200 lines, put procedures in skills, and enforce each rule that must always hold with a hook or a permission.
 - Agents work up to each gate, but they do not pass it. The maintainer approves a gate when they merge its pull request (PR).
-- Build each stage by hand on this repository first. Write the problems that you find in a "Dogfood notes" section of the PR description. Then turn the lessons into templates, conventions, and skills.
+- Build each stage by hand on this repository first. If a convention, a template, or a skill causes a problem, write the fix as a follow-up task in the PR description. Then turn these fixes into templates, conventions, and skills. Do not record a lesson that leads to no fix.
 - Keep each rule free of a language, a framework, or a cloud provider. A sample project in another stack, under `evals/`, proves this.
 - Make the smallest change that does the whole job.
 
