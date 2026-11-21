@@ -60,11 +60,11 @@ Do the phases in this order. A phase starts after the maintainer merges the PRs 
 | --- | --- | --- |
 | 0. Bootstrap | Conventions for prose, Markdown, branches, commits, PRs, and labels. `AGENTS.md`, `README.md`, the license, and the bundled skills. | Done in [#1](https://github.com/vasapolrittideah/ai-dlc-framework/pull/1) |
 | 1. Git guardrails | Deny rules in `.claude/settings.json` and the `hooks/git_guard.py` hook with tests | Done in [#2](https://github.com/vasapolrittideah/ai-dlc-framework/pull/2) |
-| 2. Intent | Write the intent of the framework by hand, from an interview with the maintainer. Then turn it into the intent convention, the intent template, and the `intent` skill. | Next |
-| 3. Design | Write the design of the framework from its intent. Decide the layout of the plugin, the agent-skills skills to copy, and the location of stage artifacts in a project. Then turn it into the design convention, template, and skill. | Planned |
-| 4. Agent workflow | Write and approve the plan of the workflow that the Subagents and Review gate decisions describe. Add the research subagent, the self-review, the review script, the approval stamps, the hook that blocks a commit or a PR without a stamp, and the first review roles, such as a code reviewer and a writing reviewer. Do this phase before the build phase, so that the review gate checks the code of the plugin. | Planned |
-| 5. Build | Write and approve the plan. Create the plugin skeleton, copy and rewrite the chosen skills, and add Vale, markdownlint, and CI. Add each check in this order: standalone, embedded in a stage skill, chained, and then required on each PR. Make the CI checks required in the ruleset of `main`. | Planned |
-| 6. Verify | Add the verify skill, which collects end-to-end, property, and differential test results as evidence. Add a commit gate that starts in observe mode before it enforces. Add an eval suite of 20 to 50 real tasks, and evals of the reviewers from past failures. Add the sample project in another stack under `evals/`. Run the evals when a skill, a hook, or `AGENTS.md` changes. | Planned |
+| 2. Intent | Write the intent of the framework by hand, from an interview with the maintainer. Then turn it into the intent convention, the intent template, and the `intent` skill. Copy and rewrite the skills of this phase from the [Skills from agent-skills](#skills-from-agent-skills) section. | Next |
+| 3. Design | Write the design of the framework from its intent. Decide the layout of the plugin and the location of stage artifacts in a project. Read each skill in the Skills from agent-skills section, and confirm or change its phase. Then turn the design into the design convention, template, and skill, and copy and rewrite the skills of this phase. | Planned |
+| 4. Agent workflow | Write and approve the plan of the workflow that the Subagents and Review gate decisions describe. Add the research subagent, the self-review, the review script, the approval stamps, the hook that blocks a commit or a PR without a stamp, and the first review roles, such as a code reviewer and a writing reviewer. Copy and rewrite the skills of this phase, which all stages use. Do this phase before the build phase, so that the review gate checks the code of the plugin. | Planned |
+| 5. Build | Write and approve the plan. Turn the plan of phase 4 into the plan convention, the plan template, and the `plan` and `build` skills. Create the plugin skeleton, copy and rewrite the skills of this phase, and add Vale, markdownlint, and CI. Add each check in this order: standalone, embedded in a stage skill, chained, and then required on each PR. Make the CI checks required in the ruleset of `main`. | Planned |
+| 6. Verify | Add the verify skill, and copy and rewrite the skills of this phase. The verify skill collects end-to-end, property, and differential test results as evidence. Add a commit gate that starts in observe mode before it enforces. Add an eval suite of 20 to 50 real tasks, and evals of the reviewers from past failures. Add the sample project in another stack under `evals/`. Run the evals when a skill, a hook, or `AGENTS.md` changes. | Planned |
 | 7. Release of version 1 | Release version 1 with release-please, and write the install steps in `README.md` | Planned |
 
 After version 1, the work continues with these items:
@@ -73,6 +73,22 @@ After version 1, the work continues with these items:
 - Support for other agents, such as Codex
 - A separate GitHub identity for the agent, such as a bot account or a GitHub App
 - Vale rules that target projects can turn on
+
+## Skills from agent-skills
+
+This table proposes the phase in which this project copies and rewrites each skill of agent-skills. The design phase reads each skill and confirms the table. The skills of phase 4 do not belong to 1 stage, because each stage uses them.
+
+| Phase | Skills |
+| --- | --- |
+| 2. Intent | `interview-me` and `idea-refine` |
+| 3. Design | `spec-driven-development`, `api-and-interface-design`, and `documentation-and-adrs` |
+| 4. Agent workflow | `source-driven-development`, `doubt-driven-development`, `constraint-driven-development`, and `context-engineering` |
+| 5. Build | `planning-and-task-breakdown`, `incremental-implementation`, `test-driven-development`, `debugging-and-error-recovery`, `code-simplification`, `git-workflow-and-versioning`, and `frontend-ui-engineering` |
+| 6. Verify | `code-review-and-quality`, `security-and-hardening`, `performance-optimization`, and `browser-testing-with-devtools` |
+| After version 1, deploy stage | `shipping-and-launch` and `ci-cd-and-automation` |
+| After version 1, maintain stage | `observability-and-instrumentation` and `deprecation-and-migration` |
+
+This project does not copy `using-agent-skills`, because it defines a lifecycle of its own.
 
 ## Research in each phase
 
@@ -95,7 +111,6 @@ Keep only the main sources in the Sources section of this roadmap. The table bel
 
 - Can a Claude Code plugin declare a dependency on another plugin? If it cannot, `README.md` lists the install steps for the `ponytail` plugin.
 - Where does a project keep the artifacts of each stage? The design phase decides this.
-- Which skills of agent-skills does this project copy? The design phase decides this.
 - Does the design stage use architecture decision records (ADRs)? If it does, move each decision of this roadmap that has rejected options into an ADR, and link the ADR from the Decisions table. The design phase decides this.
 - Claude Code has a built-in `/verify` skill. Does the skill of the verify stage keep the name `verify`, or does it get another name? The design phase decides this.
 
