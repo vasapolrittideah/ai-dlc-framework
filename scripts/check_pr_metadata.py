@@ -16,7 +16,9 @@ docs/conventions/commit-messages.md:
 - a subject line of at most 72 characters.
 
 It also checks that the level 2 headings of the description are the headings of the
-Template section of docs/conventions/pull-requests.md, in the same order.
+Template section of docs/conventions/pull-requests.md, in the same order, and that the
+description has no HTML comments, because the conventions ask you to delete the comments
+of the template. Lines in code blocks and text in inline code do not count.
 
 A script cannot tell if a description uses the imperative mood or names a specific
 change, so the maintainer checks these rules in review.
@@ -38,6 +40,7 @@ SUBJECT = re.compile(r"^(?P<type>[^\s():!]+)(?:\((?P<scope>[^()]*)\))?(?P<breaki
 TYPE_ROW = re.compile(r"^\|\s*`([^`]+)`\s*\|")
 MARKUP = re.compile(r"`|\]\(|://")
 FENCE = re.compile(r"^\s*(```|~~~)")
+INLINE_CODE = re.compile(r"`[^`]*`")
 
 
 def load_types(path=COMMIT_CONVENTION):
@@ -85,16 +88,16 @@ def load_headings(path=PR_CONVENTION):
     return headings
 
 
-def body_headings(body):
-    """Return the level 2 headings of a Markdown text, without the lines of code blocks."""
-    headings = []
+def prose_lines(body):
+    """Return the lines of a Markdown text outside code blocks, without inline code."""
+    lines = []
     in_block = False
     for line in body.splitlines():
         if FENCE.match(line):
             in_block = not in_block
-        elif not in_block and line.startswith("## "):
-            headings.append(line[3:].strip())
-    return headings
+        elif not in_block:
+            lines.append(INLINE_CODE.sub("", line))
+    return lines
 
 
 def check_title(title, types, scopes):
@@ -124,15 +127,18 @@ def check_title(title, types, scopes):
 
 
 def check_body(body, expected):
-    """Return the findings for the headings of the description."""
-    actual = body_headings(body)
-    if actual == expected:
-        return []
-    findings = ['the heading "{0}" is missing'.format(heading) for heading in expected if heading not in actual]
-    findings += ['the heading "{0}" is not in the template'.format(heading)
-                 for heading in actual if heading not in expected]
-    if not findings:
-        findings.append("the headings are not once each in the order of the template: " + ", ".join(expected))
+    """Return the findings for the headings and the HTML comments of the description."""
+    lines = prose_lines(body)
+    actual = [line[3:].strip() for line in lines if line.startswith("## ")]
+    findings = []
+    if actual != expected:
+        findings = ['the heading "{0}" is missing'.format(heading) for heading in expected if heading not in actual]
+        findings += ['the heading "{0}" is not in the template'.format(heading)
+                     for heading in actual if heading not in expected]
+        if not findings:
+            findings.append("the headings are not once each in the order of the template: " + ", ".join(expected))
+    if any("<!--" in line for line in lines):
+        findings.append("the description has an HTML comment. Delete the comments of the template")
     return findings
 
 
@@ -151,7 +157,7 @@ def main():
         for finding in findings:
             print("- " + finding, file=sys.stderr)
         sys.exit(1)
-    print("The PR title and the description headings follow the conventions.")
+    print("The PR title and the description follow the conventions.")
 
 
 if __name__ == "__main__":

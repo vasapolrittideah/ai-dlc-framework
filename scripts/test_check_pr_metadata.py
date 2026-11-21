@@ -112,6 +112,17 @@ class Descriptions(unittest.TestCase):
             with self.subTest(body=body):
                 self.assertIn("not once each in the order", self.findings(body)[0])
 
+    def test_html_comment_fails(self):
+        for body in (GOOD_BODY.replace("## Why\n", "## Why\n\n<!-- State the problem. -->\n"),
+                     GOOD_BODY + "\n\n<!--\nA comment on 2 lines.\n-->\n"):
+            with self.subTest(body=body):
+                self.assertEqual(self.findings(body),
+                                 ["the description has an HTML comment. Delete the comments of the template"])
+
+    def test_html_comment_in_code_does_not_count(self):
+        body = GOOD_BODY.replace("## Why\n", "## Why\n\nThe `<!--` marker starts a comment.\n\n```html\n<!-- x -->\n```\n")
+        self.assertEqual(self.findings(body), [])
+
 
 class Rules(unittest.TestCase):
     def test_types_come_from_the_convention(self):
@@ -130,7 +141,8 @@ class Rules(unittest.TestCase):
 
     def test_pr_template_file_matches_the_convention(self):
         with open(os.path.join(ROOT, ".github", "pull_request_template.md"), encoding="utf-8") as file:
-            self.assertEqual(check_pr_metadata.check_body(file.read(), check_pr_metadata.load_headings()), [])
+            findings = check_pr_metadata.check_body(file.read(), check_pr_metadata.load_headings())
+        self.assertEqual(findings, ["the description has an HTML comment. Delete the comments of the template"])
 
     def test_scopes_come_from_the_config(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -166,6 +178,12 @@ class Script(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn('PR description: the heading "Result" is missing', result.stderr)
         self.assertIn('PR description: the heading "Summary" is not in the template', result.stderr)
+
+    def test_template_comments_exit_1(self):
+        with open(os.path.join(ROOT, ".github", "pull_request_template.md"), encoding="utf-8") as file:
+            result = self.run_script("feat(plugin): add the PR metadata check", file.read())
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("PR description: the description has an HTML comment", result.stderr)
 
     def test_missing_title_or_body_exits_2(self):
         self.assertEqual(self.run_script(None).returncode, 2)
