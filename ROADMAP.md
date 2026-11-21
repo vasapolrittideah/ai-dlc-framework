@@ -37,20 +37,20 @@ The bundled `simple-english` and `humanizer` skills are also sources. [`skills/T
 
 ## Decisions
 
-| Topic | Decision |
-| --- | --- |
-| Distribution | A Claude Code plugin named `ai-dlc`, with a marketplace in this repository |
-| Agents | Claude Code only in version 1. `AGENTS.md` stays free of rules for 1 agent, so that other agents can follow it later. |
-| Scope of version 1 | The intent, design, build, and verify stages. The deploy and maintain stages come after version 1. |
-| Stage names | `intent`, `design`, `build`, `verify`, `deploy`, and `maintain`. Approval of the plan is the gate of the build stage. |
-| Scripts and hooks | Python 3.9 or later, with the standard library only. Each hook is a separate program that reads JSON from standard input. |
-| Git workflow | Trunk-based development, short-lived branches, squash merges by the maintainer only, Semantic Versioning, and release-please |
-| Skills | Copy the needed skills of agent-skills into this repository and rewrite them for the stages. Do not depend on the agent-skills plugin. Depend on the `ponytail` plugin. Bundle `simple-english` and `humanizer`. |
-| Prose checks | The `simple-english` and `humanizer` skills for writing, Vale with rules from the conventions of this project, and a writing reviewer for meaning. Vale and the reviewer come in the build stage. |
-| Git guardrails | The agent uses the GitHub token of the maintainer, so GitHub cannot tell the agent from the maintainer. The `hooks/git_guard.py` hook blocks the commands that only the maintainer runs. A separate identity for the agent comes after version 1. |
-| Subagents | The main agent uses read-only subagents for 2 jobs. The first job is research during the work, such as reading documentation or searching code across many files. A subagent returns the answer, its evidence as a file and line or a URL, and the parts that it did not check. The second job is a self-review before the review gate. A self-review only gives advice. |
-| Review gate | A script runs each review role as a separate, read-only process. The script takes the prompt from the file of the role and the diff from the staged tree, so the main agent cannot change them. If the role approves, the script writes a stamp for the tree, and a hook blocks a commit or a PR that has no stamp. The main agent fixes the findings and sends the change back to the same reviewer, for at most 3 rounds. After the third round, the main agent stops and asks the maintainer. |
-| Language | Agents talk with the maintainer in Thai and write every file in English. |
+| Topic | Decision | Rejected options |
+| --- | --- | --- |
+| Distribution | A Claude Code plugin named `ai-dlc`, with a marketplace in this repository | A template that projects copy, because a copy is hard to update to a new version |
+| Agents | Claude Code only in version 1. `AGENTS.md` stays free of rules for 1 agent, so that other agents can follow it later. | Claude Code and Codex from the start, because each agent needs its own review runner and hook, and Codex skips project hooks until the user trusts them |
+| Scope of version 1 | The intent, design, build, and verify stages. The deploy and maintain stages come after version 1. | All 6 stages, because the deploy and maintain stages depend most on the stack and the cloud provider of a project |
+| Stage names | `intent`, `design`, `build`, `verify`, `deploy`, and `maintain`. Approval of the plan is the gate of the build stage. | The names Plan and Test of the playbook, because `plan` is also the name of a skill and verification covers more than tests. A split into 7 stages, because the build stage would lose its plan gate. |
+| Scripts and hooks | Python 3.9 or later, with the standard library only. Each hook is a separate program that reads JSON from standard input. | Rust or Go binaries, because each platform needs its own binary. Node, because projects in other stacks do not always have it. Python with `uv`, because each user needs `uv`. |
+| Git workflow | Trunk-based development, short-lived branches, squash merges by the maintainer only, Semantic Versioning, and release-please | None recorded |
+| Skills | Copy the needed skills of agent-skills into this repository and rewrite them for the stages. Do not depend on the agent-skills plugin. Depend on the `ponytail` plugin. Bundle `simple-english` and `humanizer`. | A dependency on the agent-skills plugin, because its own lifecycle competes with the stages in the context of the agent, and its updates change behavior without the evals of this project |
+| Prose checks | The `simple-english` and `humanizer` skills for writing, Vale with rules from the conventions of this project, and a writing reviewer for meaning. Vale and the reviewer come in the build stage. | Vale alone, because it cannot judge meaning. The skills alone, because nothing enforces them. The stock Vale styles, because they conflict with the conventions of this project. textlint, write-good, and alex, because they need Node. |
+| Git guardrails | The agent uses the GitHub token of the maintainer, so GitHub cannot tell the agent from the maintainer. The `hooks/git_guard.py` hook blocks the commands that only the maintainer runs. A separate identity for the agent comes after version 1. | A separate identity for the agent now, because it is too much setup for 1 maintainer |
+| Subagents | The main agent uses read-only subagents for 2 jobs. The first job is research during the work, such as reading documentation or searching code across many files. A subagent returns the answer, its evidence as a file and line or a URL, and the parts that it did not check. The second job is a self-review before the review gate. A self-review only gives advice. | None recorded |
+| Review gate | A script runs each review role as a separate, read-only process. The script takes the prompt from the file of the role and the diff from the staged tree, so the main agent cannot change them. If the role approves, the script writes a stamp for the tree, and a hook blocks a commit or a PR that has no stamp. The main agent fixes the findings and sends the change back to the same reviewer, for at most 3 rounds. After the third round, the main agent stops and asks the maintainer. | A subagent as the reviewer of the gate, because the main agent writes its prompt, can skip it, and reports its verdict |
+| Language | Agents talk with the maintainer in Thai and write every file in English. | None recorded |
 
 ## Phases
 
@@ -95,6 +95,7 @@ Keep only the main sources in the Sources section of this roadmap. The table bel
 - Can a Claude Code plugin declare a dependency on another plugin? If it cannot, `README.md` lists the install steps for the `ponytail` plugin.
 - Where does a project keep the artifacts of each stage? The design phase decides this.
 - Which skills of agent-skills does this project copy? The design phase decides this.
+- Does the design stage use architecture decision records (ADRs)? If it does, move each decision of this roadmap that has rejected options into an ADR, and link the ADR from the Decisions table. The design phase decides this.
 - Claude Code has a built-in `/verify` skill. Does the skill of the verify stage keep the name `verify`, or does it get another name? The design phase decides this.
 
 ## Changes to this roadmap
