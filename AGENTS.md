@@ -50,7 +50,7 @@ Run these commands before you open or update a PR:
 - `python3 -m json.tool .wongchon/config.json > /dev/null`
 - `python3 -m unittest discover -s hooks`
 - `python3 -m unittest discover -s scripts`
-- `PR_TITLE='<PR title>' python3 scripts/check_pr_title.py`
+- `PR_TITLE='<PR title>' PR_BODY="$(cat <PR description file>)" python3 scripts/check_pr_metadata.py`
 
 The CI workflow in `.github/workflows/ci.yml` runs these checks on each PR to `main`, on Python 3.9 and the latest Python. No linter runs yet, and the only hook is the Git guard of the [Delivery authority](#delivery-authority) section. Until the build stage adds more checks, the maintainer checks each PR against the conventions.
 

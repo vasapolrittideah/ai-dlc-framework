@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Check a pull request title against the subject rules of the commit message conventions.
+"""Check the title and the description headings of a pull request against the conventions.
 
 Run this script from the root of the project. It reads the title from the PR_TITLE
-environment variable, so that a CI workflow never puts the title inside a shell script.
-It takes the types from the Types table of docs/conventions/commit-messages.md next to
-this script, and the scope names from commit.scopes in .wongchon/config.json of the
-project. The script checks:
+environment variable and the description from the PR_BODY environment variable, so that
+a CI workflow never puts them inside a shell script. It reads its rules from the
+conventions next to this script and from .wongchon/config.json of the project.
+
+The script checks the title against the subject rules of
+docs/conventions/commit-messages.md:
 
 - the form <type>(<scope>)!: <description>, with an optional scope and breaking marker.
 - a type from the Types table, and a scope name from commit.scopes.
@@ -13,27 +15,32 @@ project. The script checks:
   has no backticks, Markdown links, or URLs.
 - a subject line of at most 72 characters.
 
+It also checks that the level 2 headings of the description are the headings of the
+Template section of docs/conventions/pull-requests.md, in the same order.
+
 A script cannot tell if a description uses the imperative mood or names a specific
 change, so the maintainer checks these rules in review.
 
-If the title breaks a rule, the script writes each finding to standard error and exits
-with code 1.
+If the pull request breaks a rule, the script writes each finding to standard error
+and exits with code 1.
 """
 import json
 import os
 import re
 import sys
 
-CONVENTION = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir,
-                          "docs", "conventions", "commit-messages.md")
+CONVENTIONS = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "docs", "conventions")
+COMMIT_CONVENTION = os.path.join(CONVENTIONS, "commit-messages.md")
+PR_CONVENTION = os.path.join(CONVENTIONS, "pull-requests.md")
 CONFIG = os.path.join(".wongchon", "config.json")
 MAX_LENGTH = 72
 SUBJECT = re.compile(r"^(?P<type>[^\s():!]+)(?:\((?P<scope>[^()]*)\))?(?P<breaking>!)?: (?P<description>\S.*)$")
 TYPE_ROW = re.compile(r"^\|\s*`([^`]+)`\s*\|")
 MARKUP = re.compile(r"`|\]\(|://")
+FENCE = re.compile(r"^\s*(```|~~~)")
 
 
-def load_types(path=CONVENTION):
+def load_types(path=COMMIT_CONVENTION):
     """Return the types in the Types table of the commit message conventions."""
     types = set()
     in_table = False
@@ -57,6 +64,37 @@ def load_scopes(path=CONFIG):
     with open(path, encoding="utf-8") as file:
         config = json.load(file)
     return {scope["name"] for scope in config.get("commit", {}).get("scopes", [])}
+
+
+def load_headings(path=PR_CONVENTION):
+    """Return the level 2 headings in the code block of the Template section of the PR conventions."""
+    headings = []
+    with open(path, encoding="utf-8") as file:
+        lines = file.read().splitlines()
+    start = lines.index("## Template")
+    in_block = False
+    for line in lines[start + 1:]:
+        if FENCE.match(line):
+            if in_block:
+                break
+            in_block = True
+        elif in_block and line.startswith("## "):
+            headings.append(line[3:].strip())
+    if not headings:
+        raise ValueError("cannot read the headings of the Template section of {0}".format(path))
+    return headings
+
+
+def body_headings(body):
+    """Return the level 2 headings of a Markdown text, without the lines of code blocks."""
+    headings = []
+    in_block = False
+    for line in body.splitlines():
+        if FENCE.match(line):
+            in_block = not in_block
+        elif not in_block and line.startswith("## "):
+            headings.append(line[3:].strip())
+    return headings
 
 
 def check_title(title, types, scopes):
@@ -85,18 +123,35 @@ def check_title(title, types, scopes):
     return findings
 
 
+def check_body(body, expected):
+    """Return the findings for the headings of the description."""
+    actual = body_headings(body)
+    if actual == expected:
+        return []
+    findings = ['the heading "{0}" is missing'.format(heading) for heading in expected if heading not in actual]
+    findings += ['the heading "{0}" is not in the template'.format(heading)
+                 for heading in actual if heading not in expected]
+    if not findings:
+        findings.append("the headings are not once each in the order of the template: " + ", ".join(expected))
+    return findings
+
+
 def main():
     title = os.environ.get("PR_TITLE")
-    if not title:
-        print("Set the PR_TITLE environment variable to the pull request title.", file=sys.stderr)
+    # shortcut: an environment variable holds at most 128 KiB on Linux, read GITHUB_EVENT_PATH if a body is larger
+    body = os.environ.get("PR_BODY")
+    if not title or body is None:
+        print("Set PR_TITLE to the pull request title and PR_BODY to its description.", file=sys.stderr)
         sys.exit(2)
-    findings = check_title(title, load_types(), load_scopes())
+    findings = ["PR title: " + finding for finding in check_title(title, load_types(), load_scopes())]
+    findings += ["PR description: " + finding for finding in check_body(body, load_headings())]
     if findings:
-        print("The PR title does not follow docs/conventions/commit-messages.md:", file=sys.stderr)
+        print("The pull request does not follow docs/conventions/commit-messages.md and "
+              "docs/conventions/pull-requests.md:", file=sys.stderr)
         for finding in findings:
             print("- " + finding, file=sys.stderr)
         sys.exit(1)
-    print("The PR title follows the subject rules.")
+    print("The PR title and the description headings follow the conventions.")
 
 
 if __name__ == "__main__":
