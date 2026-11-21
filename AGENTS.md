@@ -54,7 +54,7 @@ No linter or CI runs in this repository yet, and the only hook is the Git guard 
 
 ## Review roles
 
-No review role exists yet. The build stage adds review roles, such as a writing reviewer, and lists them in this section.
+No review role exists yet. The agent workflow phase of the [Roadmap](ROADMAP.md) adds review roles, such as a writing reviewer, and lists them in this section.
 
 ## Conventions
 
