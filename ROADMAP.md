@@ -48,6 +48,8 @@ The bundled `simple-english` and `humanizer` skills are also sources. [`skills/T
 | Skills | Copy the needed skills of agent-skills into this repository and rewrite them for the stages. Do not depend on the agent-skills plugin. Depend on the `ponytail` plugin. Bundle `simple-english` and `humanizer`. |
 | Prose checks | The `simple-english` and `humanizer` skills for writing, Vale with rules from the conventions of this project, and a writing reviewer for meaning. Vale and the reviewer come in the build stage. |
 | Git guardrails | The agent uses the GitHub token of the maintainer, so GitHub cannot tell the agent from the maintainer. The `hooks/git_guard.py` hook blocks the commands that only the maintainer runs. A separate identity for the agent comes after version 1. |
+| Subagents | The main agent uses read-only subagents for 2 jobs. The first job is research during the work, such as reading documentation or searching code across many files. A subagent returns the answer, its evidence as a file and line or a URL, and the parts that it did not check. The second job is a self-review before the review gate. A self-review only gives advice. |
+| Review gate | A script runs each review role as a separate, read-only process. The script takes the prompt from the file of the role and the diff from the staged tree, so the main agent cannot change them. If the role approves, the script writes a stamp for the tree, and a hook blocks a commit or a PR that has no stamp. The main agent fixes the findings and sends the change back to the same reviewer, for at most 3 rounds. After the third round, the main agent stops and asks the maintainer. |
 | Language | Agents talk with the maintainer in Thai and write every file in English. |
 
 ## Phases
