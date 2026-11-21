@@ -1,6 +1,6 @@
 ---
 name: idea-refine
-description: Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on "ideate", "refine this idea", or "stress-test my plan".
+description: Refines a raw idea into a clear direction through divergent and convergent thinking, and writes the direction into the intent of the change. Use in the intent stage when an idea is still vague, when you need to stress-test assumptions before you commit to a direction, or when you want to expand options before you choose one. Use it also when the user says "ideate", "refine this idea", or "stress-test my plan".
 ---
 
 # Idea Refine
@@ -15,33 +15,21 @@ Refines raw ideas into sharp, actionable concepts worth building through structu
 - Use when you need to stress-test assumptions before committing to a direction
 - Use when you want to expand options before converging on one
 - Trigger phrases: "Help me refine this idea", "Ideate on [concept]", "Stress-test my plan"
-- Not for: a user who is unsure what they want at all (use `interview-me`), or a direction already chosen that needs a spec (use `spec-driven-development`)
+- Not for: a user who is unsure what they want at all (use `interview-me`), or a change with an approved intent (it goes to the design stage)
 
 ## How It Works
 
 1.  **Understand & Expand (Divergent):** Restate the idea, ask sharpening questions, and generate variations.
 2.  **Evaluate & Converge:** Cluster ideas, stress-test them, and surface hidden assumptions.
-3.  **Sharpen & Ship:** Produce a concrete markdown one-pager moving work forward.
+3.  Sharpen and record: Write the chosen direction into the intent of the change.
 
 ## Usage
 
 This skill is primarily an interactive dialogue. Invoke it with an idea, and the agent will guide you through the process.
 
-```bash
-# Optional. Run from the project root so this creates ./docs/ideas.
-# <skill-dir> is the directory that contains this SKILL.md
-# (for example .agents/skills/idea-refine or .cursor/skills/idea-refine).
-bash <skill-dir>/scripts/idea-refine.sh
-```
-
 ## Output
 
-The final output is a markdown one-pager saved to `docs/ideas/[idea-name].md` (after user confirmation), containing:
-- Problem Statement
-- Recommended Direction
-- Key Assumptions
-- MVP Scope
-- Not Doing list
+The final output is the intent of the change in `docs/intents/<change name>.md`, as the [intent convention](../../docs/conventions/intents.md) states. Phase 3 puts the chosen direction, its assumptions, and its Not Doing list into the sections of the intent.
 
 ## Detailed Instructions
 
@@ -112,39 +100,22 @@ After the user reacts to Phase 1 (indicates which ideas resonate, pushes back, a
 
 **Be honest, not supportive.** If an idea is weak, say so with kindness. A good ideation partner is not a yes-machine. Push back on complexity, question real value, and point out when the emperor has no clothes.
 
-#### Phase 3: Sharpen & Ship
+#### Phase 3: Sharpen and record
 
-Produce a concrete artifact — a markdown one-pager that moves work forward:
+Write the result into the intent of the change, as the [intent convention](../../docs/conventions/intents.md) states. If the intent does not exist yet, create it with the status `Draft`. Put each result in the section of the intent that this table names:
 
-```markdown
-# [Idea Name]
-
-## Problem Statement
-[One-sentence "How Might We" framing]
-
-## Recommended Direction
-[The chosen direction and why — 2-3 paragraphs max]
-
-## Key Assumptions to Validate
-- [ ] [Assumption 1 — how to test it]
-- [ ] [Assumption 2 — how to test it]
-- [ ] [Assumption 3 — how to test it]
-
-## MVP Scope
-[The minimum version that tests the core assumption. What's in, what's out.]
-
-## Not Doing (and Why)
-- [Thing 1] — [reason]
-- [Thing 2] — [reason]
-- [Thing 3] — [reason]
-
-## Open Questions
-- [Question that needs answering before building]
-```
+| Result of the session | Section of the intent |
+| --- | --- |
+| The "How Might We" problem statement | Problem |
+| The chosen direction and its reason, in 2 or 3 paragraphs at most | Outcome |
+| The minimum version that tests the main assumption | Outcome and Success criteria |
+| Each assumption to validate, with the way to test it | Open questions, with the stage that tests it |
+| Each item of the Not Doing list, with its reason | Out of scope |
+| Each question that needs an answer before the build | Open questions |
 
 **The "Not Doing" list is arguably the most valuable part.** Focus is about saying no to good ideas. Make the trade-offs explicit.
 
-Ask the user if they'd like to save this to `docs/ideas/[idea-name].md` (or a location of their choosing). Only save if they confirm.
+Write the intent only after the user confirms the final direction. Do not create a separate file for the session.
 
 ### Anti-patterns to Avoid
 
@@ -191,5 +162,5 @@ After completing an ideation session:
 - [ ] Multiple directions were explored, not just the first idea
 - [ ] Hidden assumptions are explicitly listed with validation strategies
 - [ ] A "Not Doing" list makes trade-offs explicit
-- [ ] The output is a concrete artifact (markdown one-pager), not just conversation
+- [ ] The chosen direction, its assumptions, and its Not Doing list are in the intent of the change, as the intent convention states
 - [ ] The user confirmed the final direction before any implementation work

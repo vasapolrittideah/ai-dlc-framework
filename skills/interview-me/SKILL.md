@@ -1,6 +1,6 @@
 ---
 name: interview-me
-description: Extracts what the user actually wants instead of what they think they should want. Achieves this through one-question-at-a-time interview until ~95% confidence about the underlying intent. Use when an ask is underspecified ("build me X" without "for whom" or "why now"), when the user explicitly invokes ("interview me", "grill me", "are we sure?", "stress-test my thinking"), or when you catch yourself silently filling in ambiguous requirements before any plan, spec, or code exists.
+description: Finds out what the owner of a change wants, with an interview of 1 question at a time, until you can predict the next answers. Then writes the confirmed intent of the change in docs/intents/. Use at the start of the intent stage, when an ask does not say for whom, why now, or what success is, when the user says "interview me", "grill me", "are we sure?", or "stress-test my thinking", or when you start to fill in unclear requirements before an intent, a design, or code exists.
 ---
 
 # Interview Me
@@ -11,7 +11,7 @@ What people ask for and what they actually want are different things. They ask f
 
 The cheapest moment to find this gap is before any plan, spec, or code exists. Once you've started building, switching costs are real, and the user will rationalize the wrong thing into a "good enough" thing. The misfit gets locked in.
 
-This skill closes the gap before it costs anything. The other Define-phase skills assume you already know roughly what you want: `idea-refine` generates variations from an idea, `spec-driven-development` writes the requirements down, `doubt-driven-development` stress-tests a plan after you've drafted one. Interview-me is the part before all of those, where you ask one question at a time, with your best guess attached, until you can predict what the user is going to say before they say it.
+This skill closes the gap before it costs anything. It is the first step of the intent stage. The later steps assume that you already know roughly what the owner wants: `idea-refine` generates variations from an idea, and the design stage writes the requirements from the approved intent. In this skill, you ask 1 question at a time, with your best guess attached, until you can predict what the owner is going to say before they say it.
 
 ## When to Use
 
@@ -98,12 +98,13 @@ When your confidence is high, write back what you now think the user wants. Keep
 ```
 Here's what I now think you want:
 
-- Outcome:      <one line>
-- User:         <one line — who benefits>
-- Why now:      <one line — what changed>
-- Success:      <one line — how we know it worked>
-- Constraint:   <one line — the binding limit>
-- Out of scope: <one line — what we're explicitly not doing>
+- Problem:            <one line: who has the problem, and why now>
+- Outcome:            <one line: what the change gives>
+- Success criteria:   <one line: the results that a person or a check can observe>
+- Affected users:     <one line: the users and systems that the change affects>
+- Constraints:        <one line: the main limit first>
+- Out of scope:       <one line: what the change excludes>
+- Open questions:     <one line: the questions for a later stage, if any>
 
 Yes / no / refine?
 ```
@@ -125,9 +126,9 @@ If they correct you, fold the correction in and restate. Loop until you get an e
 
 When the user confirms the statement of intent with an explicit "yes":
 
-1. **Deliver the confirmed Statement of Intent.**
-2. **Offer downstream paths** (offer to save it to `docs/intent/[topic].md`, draft a spec with `spec-driven-development`, or move to task planning after the spec).
-3. **STOP YOUR TURN IMMEDIATELY.** Do NOT invoke tools or start downstream work in this turn. Hand control back to the user to choose the next step.
+1. Write the confirmed intent to `docs/intents/<change name>.md`, as the [intent convention](../../docs/conventions/intents.md) states. Write the status `Draft`, and write 1 row in the Answers table for each question of the interview.
+2. Tell the user the path of the file, and that the intent goes to the design stage only after the owner approves it.
+3. Stop your turn. Do not start the design or other later work in this turn. The user chooses the next step.
 
 ### The 95% Confidence Stop
 
@@ -143,7 +144,7 @@ This is a checkable test, not a vibe. It also has a floor: if you've gone severa
 
 The output of this skill is a **confirmed statement of intent**: the restate from Step 4, with an explicit yes from Step 5. That's the deliverable. Specs, plans, and task lists are downstream; they consume the intent this skill produces.
 
-If the user wants the intent to persist (a multi-session project, a handoff to another collaborator), offer to save it to `docs/intent/[topic].md`. Only save if they confirm.
+Write the intent file only after the explicit yes, as Step 6 states. The [intent convention](../../docs/conventions/intents.md) defines its file name, its sections, and its status.
 
 ## Example
 
@@ -188,8 +189,8 @@ Two questions in, the agent has discovered the actual ask isn't "a dashboard." I
 ## Interaction with Other Skills
 
 - **`idea-refine`**: downstream. If the confirmed intent is "I want X but I don't know how to scope it," hand off to `idea-refine` to generate variations against the now-explicit intent.
-- **`spec-driven-development`**: downstream. If the confirmed intent is concrete ("I want X for Y users with Z success criteria"), hand off to `spec-driven-development` to write it down.
-- **`planning-and-task-breakdown`**: two hops downstream of this skill (after the spec).
+- The design stage: downstream. After the owner approves the intent, the design stage reads it and writes the requirements of the change.
+- The build stage: 2 stages after this skill. It plans the change from the approved design.
 - **`doubt-driven-development`**: opposite end of the timeline. Interview-me is pre-decision intent extraction; doubt-driven is post-decision artifact review. Both catch divergence, but at different moments.
 - **`source-driven-development`**: orthogonal. Interview-me clarifies what the user wants; SDD verifies framework facts. They don't compete.
 
@@ -228,8 +229,9 @@ After applying interview-me:
 - [ ] Every confidence number below ~70% was accompanied by a one-line reason (what's still unresolved or missing)
 - [ ] Questions were asked one at a time, each with the agent's guess attached
 - [ ] At least one "what would you actually want if you didn't have to justify it?" probe ran when the user gave a sophistication-signaling or convention-signaling answer
-- [ ] A concrete restate (Outcome / User / Why now / Success / Constraint / Out of scope) was written back to the user
+- [ ] A concrete restate with the sections of the intent was written back to the user, Out of scope included
 - [ ] The user confirmed the restate with an explicit yes (not "whatever you think," not "sounds good," not silence)
 - [ ] At the stop point, the agent could predict reactions to the next three questions it would ask
 - [ ] Upon receiving explicit confirmation, stopped the turn immediately without invoking tools or starting downstream work
-- [ ] Any handoff to a downstream skill (`idea-refine`, `spec-driven-development`) was framed in terms of the confirmed intent, not the original underspecified ask
+- [ ] The intent file follows the intent convention, has the status `Draft`, and has 1 Answers row for each question
+- [ ] Any handoff to `idea-refine` or the design stage was framed in terms of the confirmed intent, not the original underspecified ask
