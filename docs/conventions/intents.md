@@ -178,8 +178,12 @@ These criteria do not follow the convention. The first criterion breaks the Succ
 
 ### Answers
 
-This row writes the meaning of a reply in which the owner only confirmed the guess of the agent:
+This table writes the meaning of a reply in which the owner only confirmed the guess of the agent:
 
 ```markdown
+## Answers
+
+| Question | Reply |
+| --- | --- |
 | Can a small change skip stages? | Yes. A small change that fits in 1 PR skips the intent and design stages and starts at the build stage. |
 ```
