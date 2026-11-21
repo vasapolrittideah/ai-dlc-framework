@@ -12,7 +12,8 @@ permissions:
 jobs:
   checks:
     name: Checks (Python ${{ matrix.python }})
-    runs-on: ubuntu-latest
+    # shortcut: setup-python has no Python 3.9 for Ubuntu 26.04, move on when the minimum Python changes
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
