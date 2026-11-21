@@ -1,4 +1,4 @@
-# Intent: ai-dlc version 1
+# Intent: ai-dlc-framework version 1
 
 Author: Vasapol Rittideah
 
